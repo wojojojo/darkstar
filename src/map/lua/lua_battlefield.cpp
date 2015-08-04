@@ -67,7 +67,7 @@ inline int32 CLuaBattlefield::getBattlefieldNumber(lua_State* L)
 {
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	
-	lua_pushinteger( L, m_PLuaBattlefield->getBattlefieldNumber() );
+	lua_pushinteger( L, m_PLuaBattlefield->GetBattlefieldNumber() );
 	return 1;
 }
 
@@ -75,7 +75,7 @@ inline int32 CLuaBattlefield::getTimeLimit(lua_State* L)
 {
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	
-	lua_pushinteger( L, m_PLuaBattlefield->getTimeLimit() );
+	lua_pushinteger( L, m_PLuaBattlefield->GetTimeLimit() );
 	return 1;
 }
 
@@ -83,13 +83,13 @@ inline int32 CLuaBattlefield::getBcnmID(lua_State* L)
 {
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	
-	lua_pushinteger( L, m_PLuaBattlefield->getID() );
+	lua_pushinteger( L, m_PLuaBattlefield->GetID() );
 	return 1;
 }
 
 inline int32 CLuaBattlefield::getTimeInside(lua_State* L){
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
-	uint32 duration = (m_PLuaBattlefield->lastTick - m_PLuaBattlefield->getStartTime())/1000;
+	uint32 duration = (m_PLuaBattlefield->m_LastTick - m_PLuaBattlefield->GetStartTime())/1000;
 	lua_pushinteger( L, duration);
 	return 1;
 }
@@ -97,14 +97,14 @@ inline int32 CLuaBattlefield::getTimeInside(lua_State* L){
 inline int32 CLuaBattlefield::getFastestTime(lua_State* L){
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	
-	lua_pushinteger( L, m_PLuaBattlefield->m_FastestTime );
+	lua_pushinteger( L, m_PLuaBattlefield->GetCurrentRecord().time );
 	return 1;
 }
 
 inline int32 CLuaBattlefield::getFastestPlayer(lua_State* L){
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	
-	lua_pushstring( L, m_PLuaBattlefield->m_FastestName.c_str() );
+	lua_pushstring( L, m_PLuaBattlefield->GetCurrentRecord().name.c_str() );
 	return 1;
 }
 
@@ -118,14 +118,14 @@ inline int32 CLuaBattlefield::setAsFastest(lua_State* L){
 inline int32 CLuaBattlefield::getEntrance(lua_State* L){
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 
-	lua_pushinteger(L, m_PLuaBattlefield->getEntrance());
+	lua_pushinteger(L, m_PLuaBattlefield->GetEntrance());
 	return 1;
 }
 
 inline int32 CLuaBattlefield::setEntrance(lua_State* L){
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	DSP_DEBUG_BREAK_IF(!lua_isnumber(L, 1) || lua_isnil(L, 1));
-	m_PLuaBattlefield->setEntrance(lua_tointeger(L, 1));
+	m_PLuaBattlefield->SetEntrance(lua_tointeger(L, 1));
 	return 0;
 }
 
@@ -136,7 +136,7 @@ inline int32 CLuaBattlefield::insertAlly(lua_State* L)
 
 	uint32 groupid = lua_tointeger(L, 1);
 
-	CMobEntity* PAlly = mobutils::InstantiateAlly(groupid, m_PLuaBattlefield->getZoneId());
+	CMobEntity* PAlly = mobutils::InstantiateAlly(groupid, m_PLuaBattlefield->GetZoneID());
 	if (PAlly)
 	{
 		m_PLuaBattlefield->m_AllyList.push_back(PAlly);
@@ -182,7 +182,7 @@ inline int32 CLuaBattlefield::lose(lua_State* L)
 {
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 
-	m_PLuaBattlefield->lose();
+    m_PLuaBattlefield->SetState(STATE_LOSE);
 
 	return 0;
 }
@@ -191,7 +191,7 @@ inline int32 CLuaBattlefield::win(lua_State* L)
 {
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 
-	m_PLuaBattlefield->win();
+	m_PLuaBattlefield->SetState(STATE_WIN);
 
 	return 0;
 }

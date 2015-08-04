@@ -790,7 +790,7 @@ void CZone::ZoneServer(uint32 tick)
 
     if (m_BattlefieldHandler != nullptr)
     {
-        m_BattlefieldHandler->handleBattlefields(tick);
+        m_BattlefieldHandler->HandleBattlefields(tick);
     }
 }
 

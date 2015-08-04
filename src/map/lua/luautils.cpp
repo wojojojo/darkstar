@@ -3865,7 +3865,7 @@ int32 OnBcnmEnter(CCharEntity* PChar, CBattlefield* PBattlefield){
 
     CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
 
-    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", PZone->GetName(), PBattlefield->getBcnmName());
+    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", PZone->GetName(), PBattlefield->GetName());
 
     if (prepFile(File, "onBcnmEnter"))
     {
@@ -3907,7 +3907,7 @@ int32 OnBcnmLeave(CCharEntity* PChar, CBattlefield* PBattlefield, uint8 LeaveCod
 
     CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
 
-    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", PZone->GetName(), PBattlefield->getBcnmName());
+    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", PZone->GetName(), PBattlefield->GetName());
 
     if (prepFile(File, "onBcnmLeave"))
     {
@@ -3952,7 +3952,7 @@ int32 OnBcnmRegister(CCharEntity* PChar, CBattlefield* PBattlefield){
 
     CZone* PZone = PChar->loc.zone == nullptr ? zoneutils::GetZone(PChar->loc.destination) : PChar->loc.zone;
 
-    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", PZone->GetName(), PBattlefield->getBcnmName());
+    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", PZone->GetName(), PBattlefield->GetName());
 
     if (prepFile(File, "onBcnmRegister"))
     {
@@ -3985,7 +3985,7 @@ onBcnmDestroy - called when BCNM is destroyed (cleanup)
 *********************************************************************/
 int32 OnBcnmDestroy(CBattlefield* PBattlefield){
 
-    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", zoneutils::GetZone(PBattlefield->getZoneId())->GetName(), PBattlefield->getBcnmName());
+    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", zoneutils::GetZone(PBattlefield->GetZoneID())->GetName(), PBattlefield->GetName());
 
     if (prepFile(File, "onBcnmDestroy"))
     {
@@ -4359,6 +4359,32 @@ int32 OnChocoboDig(CCharEntity* PChar, bool pre)
     bool canDig = lua_toboolean(LuaHandle, -1);
 
     return canDig;
+}
+
+int32 OnBattlefieldTick(CBattlefield* PBattlefield)
+{
+    lua_prepscript("scripts/globals/battlefield.lua");
+
+    if (prepFile(File, "onBattlefieldTick"))
+        return 0;
+
+    CLuaBattlefield LuaBattlefield(PBattlefield);
+    Lunar<CLuaBattlefield>::push(LuaHandle, &LuaBattlefield);
+
+    if (lua_pcall(LuaHandle, 2, LUA_MULTRET, 0))
+    {
+        ShowError("luautils::onBattlefieldTick: %s\n", lua_tostring(LuaHandle, -1));
+        lua_pop(LuaHandle, 1);
+        return 0;
+    }
+
+    int32 returns = lua_gettop(LuaHandle) - oldtop;
+    if (returns > 1)
+    {
+        ShowError("luautils::onBattlefieldTick (%s): 1 return expected, got %d\n", File, returns);
+        lua_pop(LuaHandle, returns);
+    }
+    return 0;
 }
 
 

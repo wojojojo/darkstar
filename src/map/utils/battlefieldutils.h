@@ -30,27 +30,16 @@
 class CBattlefield;
 class CBattlefieldHandler;
 
-enum BATTLEFIELDTYPE {
+enum BATTLEFIELDTYPE
+{
 	BATTLEFIELDTYPE_DYNAMIS,
 	BATTLEFIELDTYPE_BCNM
 };
 
 namespace battlefieldutils
 {
-	void getLosePosition(CBattlefield* battlefield, int (&pPosition)[4]);		// returns x y z rot in that order
-	void getWinPosition(CBattlefield* battlefield, int (&pPosition)[4]);		// returns x y z rot in that order
-	void getStartPosition(uint16 zoneid, int (&pPosition)[4]);			// returns lobby position
-	bool meetsWinningConditions(CBattlefield* battlefield, uint32 tick);
-	bool meetsLosingConditions(CBattlefield* battlefield, uint32 tick);
-	bool spawnMonstersForBcnm(CBattlefield* battlefield);
-	bool spawnTreasureForBcnm(CBattlefield* battlefield);
-
-	uint8 getMaxLootGroups(CBattlefield* battlefield);						// returns maximum number of loot groups for a BCNM battlefield
-	uint16 getRollsPerGroup(CBattlefield* battlefield, uint8 groupID);		// returns the maximum number of "rolls" in a given group
-	void getChestItems(CBattlefield* battlefield);
-	CBattlefield* loadBattlefield(CBattlefieldHandler* hand, uint16 bcnmid, BATTLEFIELDTYPE type);
-
-	bool spawnSecondPartDynamis(CBattlefield* battlefield);
+	bool LoadMobs(CBattlefield* battlefield);
+	CBattlefield* LoadBattlefield(CBattlefieldHandler* hand, uint16 bcnmid, BATTLEFIELDTYPE type);
 };
 
 #endif
