@@ -25,6 +25,7 @@
 
 #include "lua_battlefield.h"
 #include "lua_baseentity.h"
+#include "../entities/npcentity.h"
 #include "../utils/mobutils.h"
 #include "../utils/zoneutils.h"
 
@@ -285,9 +286,14 @@ inline int32 CLuaBattlefield::insertEntity(lua_State* L)
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
 
     uint32 id = lua_tointeger(L, 1);
-    bool type = lua_isnil(L, 2) ? 0 : lua_tointeger(L, 2);
+    uint8 condition = lua_isnil(L, 2) ? 0 : lua_tointeger(L, 2);
 
-    m_PLuaBattlefield->PushMessage(lua_tointeger(L, 1), lua_tointeger(L, 2));
+    CBaseEntity* PEntity = zoneutils::GetEntity(id, TYPE_PC | TYPE_MOB | TYPE_NPC | TYPE_PET);
+
+    if (PEntity)
+        m_PLuaBattlefield->InsertEntity(PEntity, 0, condition);
+    else
+        ShowError("CLuaBattlefield::insertEntity unable to insert entity!");
 
     return 0;
 }
@@ -315,6 +321,7 @@ inline int32 CLuaBattlefield::getState(lua_State* L)
     lua_pushinteger(L, m_PLuaBattlefield->GetState());
     return 1;
 }
+
 inline int32 CLuaBattlefield::getRuleMask(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);

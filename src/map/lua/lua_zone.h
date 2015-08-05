@@ -51,6 +51,7 @@ public:
     int32 getPlayers(lua_State*);
     int32 getID(lua_State*);
     int32 getRegionID(lua_State*);
+    int32 getName(lua_State*);
 };
 
 #endif

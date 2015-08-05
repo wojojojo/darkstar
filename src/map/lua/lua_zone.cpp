@@ -149,6 +149,14 @@ inline int32 CLuaZone::getRegionID(lua_State* L)
     return 1;
 }
 
+inline int32 CLuaZone::getName(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_pLuaZone == nullptr);
+
+    lua_pushstring(L, m_pLuaZone->GetName());
+    return 1;
+}
+
 /************************************************************************
 *																		*
 *  Инициализация методов в lua											*
@@ -163,5 +171,6 @@ Lunar<CLuaZone>::Register_t CLuaZone::methods[] =
     LUNAR_DECLARE_METHOD(CLuaZone,getPlayers),
     LUNAR_DECLARE_METHOD(CLuaZone,getID),
     LUNAR_DECLARE_METHOD(CLuaZone,getRegionID),
+    LUNAR_DECLARE_METHOD(CLuaZone,getName),
 	{nullptr,nullptr}
 }; 
