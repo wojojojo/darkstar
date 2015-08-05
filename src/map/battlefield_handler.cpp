@@ -39,6 +39,7 @@ CBattlefieldHandler::CBattlefieldHandler(uint16 zoneid)
 	m_ZoneId = zoneid;
 
     //TODO: handle max battlefields per battlefield type
+
 	//Dynamis zone (need to add COP dyna zone)
 	//added ghelsba outpost here, 1 battlefield only
 	if (m_ZoneId > 184 && m_ZoneId < 189 ||  m_ZoneId > 133 && m_ZoneId < 136 || m_ZoneId == 140 || m_ZoneId == 35 || m_ZoneId > 38  && m_ZoneId < 43 )
@@ -70,6 +71,7 @@ void CBattlefieldHandler::HandleBattlefields(uint32 tick)
         {
             //handle it!
             CBattlefield* PBattlefield = m_Battlefields[i];
+            PBattlefield->m_LastTick = tick;
             luautils::OnBattlefieldTick(PBattlefield);
         }
     }

@@ -46,18 +46,33 @@ public:
 		return m_PLuaBattlefield;
 	}
 	int32 getBattlefieldNumber(lua_State*);
-	int32 getBcnmID(lua_State*);
+	int32 getID(lua_State*);
     int32 getTimeLimit(lua_State*);
 	int32 getTimeInside(lua_State*);
 	int32 getFastestTime(lua_State*);
 	int32 getFastestPlayer(lua_State*);
-	int32 setAsFastest(lua_State*);
+    int32 getZone(lua_State*);
+    int32 getType(lua_State*);
+    int32 getState(lua_State*);
+    int32 getRuleMask(lua_State*);
+    int32 getDeadTime(lua_State*);
+    int32 getMaxParticipants(lua_State*);
+    int32 getEntrance(lua_State*);
+    int32 allPlayersDead(lua_State*);
+    
+    int32 setState(lua_State*);
+    int32 setBattlefieldNumber(lua_State*);
+	int32 setCurrentRecord(lua_State*);
 	int32 setEntrance(lua_State*);
-	int32 getEntrance(lua_State*);
-	int32 insertAlly(lua_State*);
+	
+    int32 insertAlly(lua_State*);
 	int32 getAllies(lua_State*);
-	int32 lose(lua_State*);
+	
+    int32 lose(lua_State*);
 	int32 win(lua_State*);
+    int32 pushMessage(lua_State*);
+    int32 getEntities(lua_State*);
+    int32 insertEntity(lua_State*);
 };
 
 #endif

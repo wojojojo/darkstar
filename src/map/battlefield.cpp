@@ -50,7 +50,7 @@ CBattlefield::CBattlefield(CBattlefieldHandler* hand, uint16 id, BATTLEFIELDTYPE
     m_LastTick = 0;
 
     m_CurrentRecord.name = nullptr;
-    m_CurrentRecord.time = -1;          // fastest clear time - has to be smaller than this so we'll max this out
+    m_CurrentRecord.time = 0;
 }
 
 uint16 CBattlefield::GetID()
@@ -61,6 +61,11 @@ uint16 CBattlefield::GetID()
 uint32 CBattlefield::GetTimeLimit()
 {
     return m_TimeLimit;
+}
+
+BATTLEFIELDTYPE CBattlefield::GetType()
+{
+    return m_Type;
 }
 
 const int8* CBattlefield::GetName()
@@ -196,7 +201,7 @@ void CBattlefield::SetRuleMask(BATTLEFIELD_RULES rules)
 
 void CBattlefield::SetCurrentRecord(int8* name, uint32 time)
 {
-    if (time <= m_CurrentRecord.time)
+    if (m_CurrentRecord.time == 0 || time <= m_CurrentRecord.time)
     {
         Sql_Query(SqlHandle, "UPDATE bcnm_info SET fastestName = %s, fastestTime = %u WHERE bcnmId = %u AND zoneId = %u", name, time, m_ID, m_ZoneID);
         m_CurrentRecord.name = name;
@@ -289,4 +294,5 @@ void CBattlefield::InitBattlefield()
         if (PMob.second & CONDITION_SPAWNED_AT_START)
             PMob.first->PBattleAI->SetCurrentAction(ACTION_SPAWN);
     }
+    m_StartTime = (uint32)time(NULL);
 }
