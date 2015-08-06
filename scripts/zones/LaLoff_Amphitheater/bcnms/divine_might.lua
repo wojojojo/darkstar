@@ -9,27 +9,32 @@ require("scripts/zones/LaLoff_Amphitheater/TextIDs");
 require("scripts/globals/missions");
 require("scripts/globals/quests");
 require("scripts/globals/keyitems");
+require("scripts/globals/battlefield");
 
 -----------------------------------
 
 -- Death cutscenes:
 
--- player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,0,0); -- Hume
--- player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,1,0); -- taru
--- player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,2,0); -- mithra
--- player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,3,0); -- elvan
--- player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,4,0); -- galka
--- player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,5,0); -- divine might
--- player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,6,0); -- skip ending cs
+-- player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,0,0); -- Hume
+-- player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,1,0); -- taru
+-- player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,2,0); -- mithra
+-- player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,3,0); -- elvan
+-- player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,4,0); -- galka
+-- player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,5,0); -- divine might
+-- player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,6,0); -- skip ending cs
 
 
 -- After registering the BCNM via bcnmRegister(bcnmid)
-function onBcnmRegister(player,instance)
+function onBcnmRegister(player,battlefield)
 end;
 
 -- Physically entering the BCNM via bcnmEnter(bcnmid)
-function onBcnmEnter(player,instance)
-	player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,1,1);
+function onBcnmEnter(player,battlefield)
+	player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,1,1);
+end;
+
+function onBattlefieldTick(battlefield)
+    OnBattlefieldTick(battlefield);
 end;
 
 -- Leaving the BCNM by every mean possible, given by the LeaveCode
@@ -40,14 +45,14 @@ end;
 -- via bcnmLeave(1) or bcnmLeave(2). LeaveCodes 3 and 4 are called
 -- from the core when a player disconnects or the time limit is up, etc
 
-function onBcnmLeave(player,instance,leavecode)
+function onBcnmLeave(player,battlefield,leavecode)
 --print("leave code "..leavecode);
 
 	if (leavecode == 2) then -- play end CS. Need time and battle id for record keeping + storage
 		if (player:hasCompletedMission(ZILART,ARK_ANGELS)) then
-			player:startEvent(0x7d01,instance:getEntrance(),instance:getFastestTime(),1,instance:getTimeInside(),180,5,1);		-- winning CS (allow player to skip)
+			player:startEvent(0x7d01,battlefield:getEntrance(),battlefield:getFastestTime(),1,battlefield:getTimeInside(),180,5,1);		-- winning CS (allow player to skip)
 		else
-			player:startEvent(0x7d01,instance:getEntrance(),instance:getFastestTime(),1,instance:getTimeInside(),180,5,0);		-- winning CS (allow player to skip)
+			player:startEvent(0x7d01,battlefield:getEntrance(),battlefield:getFastestTime(),1,battlefield:getTimeInside(),180,5,0);		-- winning CS (allow player to skip)
 		end
 
     --[[ caps:
@@ -59,7 +64,7 @@ function onBcnmLeave(player,instance,leavecode)
     ]]
         
 	elseif (leavecode == 4) then
-		player:startEvent(0x7d02, 0, 0, 0, 0, 0, instance:getEntrance(), 180);	-- player lost
+		player:startEvent(0x7d02, 0, 0, 0, 0, 0, battlefield:getEntrance(), 180);	-- player lost
 	end
 end;
 

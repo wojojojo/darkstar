@@ -3,10 +3,10 @@
 -- Name: dynamis_Valkurm
 -----------------------------------
 
-
+require("scripts/globals/battlefield");
 
 -- After registering the BCNM via bcnmRegister(bcnmid)
-function onBcnmRegister(player,instance)
+function onBcnmRegister(player,battlefield)
 	
 	SetServerVariable("[DynaValkurm]UniqueID",player:getDynamisUniqueID(1286));
 	SetServerVariable("[DynaValkurm]Boss_Trigger",0);
@@ -35,7 +35,7 @@ function onBcnmRegister(player,instance)
 end;
 
 -- Physically entering the BCNM via bcnmEnter(bcnmid)
-function onBcnmEnter(player,instance)
+function onBcnmEnter(player,battlefield)
 	
 	player:setVar("DynamisID",GetServerVariable("[DynaValkurm]UniqueID"));
 	local realDay = os.time();
@@ -47,11 +47,15 @@ function onBcnmEnter(player,instance)
 	
 end;
 
+function onBattlefieldTick(battlefield)
+    OnBattlefieldTick(battlefield);
+end;
+
 -- Leaving the Dynamis by every mean possible, given by the LeaveCode
 -- 3=Disconnected or warped out (if dyna is empty: launch 4 after 3)
 -- 4=Finish he dynamis
 
-function onBcnmLeave(player,instance,leavecode)
+function onBcnmLeave(player,battlefield,leavecode)
 --print("leave code "..leavecode);
 	
 	if (leavecode == 4) then

@@ -7,7 +7,7 @@ package.loaded["scripts/zones/Sacrificial_Chamber/TextIDs"] = nil;
 -------------------------------------
 
 require("scripts/zones/Sacrificial_Chamber/TextIDs");
-
+require("scripts/globals/battlefield");
 -----------------------------------
 -- EXAMPLE SCRIPT
 -- 
@@ -21,11 +21,15 @@ require("scripts/zones/Sacrificial_Chamber/TextIDs");
 -- chars around, playing entrance CSes (entrance CSes go in bcnm.lua)
 
 -- After registering the BCNM via bcnmRegister(bcnmid)
-function onBcnmRegister(player,instance)
+function onBcnmRegister(player,battlefield)
 end;
 
 -- Physically entering the BCNM via bcnmEnter(bcnmid)
-function onBcnmEnter(player,instance)
+function onBcnmEnter(player,battlefield)
+end;
+
+function onBattlefieldTick(battlefield)
+    OnBattlefieldTick(battlefield);
 end;
 
 -- Leaving the BCNM by every mean possible, given by the LeaveCode
@@ -36,12 +40,12 @@ end;
 -- via bcnmLeave(1) or bcnmLeave(2). LeaveCodes 3 and 4 are called
 -- from the core when a player disconnects or the time limit is up, etc
 
-function onBcnmLeave(player,instance,leavecode)
+function onBcnmLeave(player,battlefield,leavecode)
 -- print("leave code "..leavecode);
 	
 	
 	if (leavecode == 2) then -- play end CS. Need time and battle id for record keeping + storage
-		player:startEvent(0x7d01,1,1,1,instance:getTimeInside(),1,1,0);
+		player:startEvent(0x7d01,1,1,1,battlefield:getTimeInside(),1,1,0);
 	elseif (leavecode == 4) then
 		player:startEvent(0x7d02);
 	end

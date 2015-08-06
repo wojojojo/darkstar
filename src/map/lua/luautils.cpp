@@ -4363,7 +4363,7 @@ int32 OnChocoboDig(CCharEntity* PChar, bool pre)
 
 int32 OnBattlefieldTick(CBattlefield* PBattlefield)
 {
-    lua_prepscript("scripts/globals/battlefield.lua");
+    lua_prepscript("scripts/zones/%s/bcnms/%s.lua", zoneutils::GetZone(PBattlefield->GetZoneID())->GetName(), PBattlefield->GetName());
 
     if (prepFile(File, "onBattlefieldTick"))
         return 0;

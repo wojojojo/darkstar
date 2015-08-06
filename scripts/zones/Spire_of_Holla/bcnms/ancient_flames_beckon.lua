@@ -10,6 +10,7 @@ require("scripts/globals/titles");
 require("scripts/globals/quests");
 require("scripts/globals/missions");
 require("scripts/globals/teleports");
+require("scripts/globals/battlefield");
 require("scripts/zones/Spire_of_Holla/TextIDs");
 
 -----------------------------------
@@ -25,12 +26,16 @@ require("scripts/zones/Spire_of_Holla/TextIDs");
 -- chars around, playing entrance CSes (entrance CSes go in bcnm.lua)
 
 -- After registering the BCNM via bcnmRegister(bcnmid)
-function onBcnmRegister(player,instance)
+function onBcnmRegister(player,battlefield)
 end;
 
 -- Physically entering the BCNM via bcnmEnter(bcnmid)
-function onBcnmEnter(player,instance)
-	print("instance code ");
+function onBcnmEnter(player,battlefield)
+	-- print("battlefield code ");
+end;
+
+function onBattlefieldTick(battlefield)
+    OnBattlefieldTick(battlefield);
 end;
 
 -- Leaving the BCNM by every mean possible, given by the LeaveCode
@@ -41,20 +46,20 @@ end;
 -- via bcnmLeave(1) or bcnmLeave(2). LeaveCodes 3 and 4 are called
 -- from the core when a player disconnects or the time limit is up, etc
 
-function onBcnmLeave(player,instance,leavecode)
+function onBcnmLeave(player,battlefield,leavecode)
 	-- printf("leavecode: %u",leavecode);
 
 	if (leavecode == 2) then -- play end CS. Need time and battle id for record keeping + storage
 		if (player:getCurrentMission(COP) == THE_MOTHERCRYSTALS) then	
 			if (player:hasKeyItem(LIGHT_OF_MEA) and player:hasKeyItem(LIGHT_OF_DEM)) then 
-				player:startEvent(0x7d01,0,0,0,instance:getTimeInside(),0,0,0,3);
+				player:startEvent(0x7d01,0,0,0,battlefield:getTimeInside(),0,0,0,3);
 			elseif (player:hasKeyItem(LIGHT_OF_MEA) or player:hasKeyItem(LIGHT_OF_DEM)) then 
-				player:startEvent(0x7d01,0,0,0,instance:getTimeInside(),0,0,0,2); 
+				player:startEvent(0x7d01,0,0,0,battlefield:getTimeInside(),0,0,0,2); 
 			end
 		elseif (player:getCurrentMission(COP) == BELOW_THE_ARKS) then
-			player:startEvent(0x7d01,0,0,0,instance:getTimeInside(),0,0,0,1); 
+			player:startEvent(0x7d01,0,0,0,battlefield:getTimeInside(),0,0,0,1); 
 		else
-			player:startEvent(0x7d01,0,0,0,instance:getTimeInside(),0,0,1); -- can't tell which cs is playing when you're doing it again to help 
+			player:startEvent(0x7d01,0,0,0,battlefield:getTimeInside(),0,0,1); -- can't tell which cs is playing when you're doing it again to help 
 		end
 	elseif (leavecode == 4) then
 		player:startEvent(0x7d02);

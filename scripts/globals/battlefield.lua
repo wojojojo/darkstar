@@ -4,14 +4,14 @@ require("scripts/globals/zone");
 
 BATTLEFIELD_RULES = {
     NONE                = 0x00,
-    ALLOW_SUBJOBS        = 0x01,
-    LOSE_EXP             = 0x02,
+    DISABLE_SUBJOBS      = 0x01,
+    LOSE_EXP            = 0x02,
     REMOVE_3MIN          = 0x04,
     SPAWN_TREASURE_ON_WIN = 0x08,
     MAAT                = 0x10
 };
 
-function onBattlefieldTick(battlefield)
+function OnBattlefieldTick(battlefield)
     local StartTime = battlefield:getStartTime();
     local Zone = battlefield:getZone();
     
@@ -37,19 +37,21 @@ function onBattlefieldTick(battlefield)
     
 end
 
-function applyRuleMask(battlefield)
+function ApplyRuleMask(battlefield)
     local RuleMask = battlefield:getRuleMask();
+    
+    if bit.band(RuleMask, )
     
     -- todo: handle generic cases here, specific in the battlefield's script
 end
 
-function meetsEndingConditions(battlefield, tick)
+function MeetsEndingConditions(battlefield, tick)
     local ReturnType = 0;
     -- todo: handle generic cases here, specific in the battlefield's script
     return ReturnType;
 end
 
-function handleTimePrompts(battlefield)
+function HandleTimePrompts(battlefield)
     local TimeLeft = battlefield:getTimeLimit() - TimeInside;
     
     -- 5 mins left in dyna
