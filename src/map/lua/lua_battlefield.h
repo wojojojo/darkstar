@@ -58,13 +58,15 @@ public:
     int32 getDeadTime(lua_State*);
     int32 getMaxParticipants(lua_State*);
     int32 getEntrance(lua_State*);
+    int32 getLevelCap(lua_State*);
     int32 allPlayersDead(lua_State*);
     
     int32 setState(lua_State*);
     int32 setBattlefieldNumber(lua_State*);
 	int32 setCurrentRecord(lua_State*);
 	int32 setEntrance(lua_State*);
-	
+    int32 setLevelCap(lua_State*);
+
     int32 insertAlly(lua_State*);
 	int32 getAllies(lua_State*);
 	

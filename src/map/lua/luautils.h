@@ -206,6 +206,7 @@ namespace luautils
     int32 OnChocoboDig(CCharEntity* PChar, bool pre);                           // chocobo digging, pre = check
 
     int32 OnBattlefieldTick(CBattlefield* PBattlefeld);
+    int32 OnBattlefieldHandlerInitialise(CZone* PZone);
 };
 
 #endif //- _LUAUTILS_H -

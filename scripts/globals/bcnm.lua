@@ -2,6 +2,7 @@ require("scripts/globals/status");
 require("scripts/globals/keyitems");
 require("scripts/globals/missions");
 require("scripts/globals/quests");
+require("scripts/globals/battlefield");
 
 -- NEW SYSTEM BCNM NOTES
 -- The "core" functions TradeBCNM EventUpdateBCNM EventTriggerBCNM EventFinishBCNM all return TRUE if the action performed is covered by the function.
@@ -786,4 +787,8 @@ function CutsceneSkip(player, npc)
         end
     end
     return skip;
+end;
+
+function ApplyRuleMask(player, battlefield)
+    
 end;

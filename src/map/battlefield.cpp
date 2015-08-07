@@ -244,6 +244,14 @@ void CBattlefield::InsertEntity(CBaseEntity* PEntity, uint8 type, uint8 conditio
             m_EnemyList.push_back(static_cast<CMobEntity*>(PEntity));
         }
     }
+    // set the duration of the effect to the current time remaining in the battlefield
+    uint32 duration = GetStartTime() - GetTimeLimit() / 1000;
+    
+    // add the effect, we'll use the battlefield id and number to determine which battlefield to enter on relogging
+    if (PEntity->objtype != TYPE_NPC)
+        static_cast<CBattleEntity*>(PEntity)->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_BATTLEFIELD, EFFECT_BATTLEFIELD, this->m_ID, duration, this->m_BattlefieldNumber), true);
+
+    PEntity->PBCNM = this;
 }
 
 void CBattlefield::ClearBattlefield()

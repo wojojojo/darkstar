@@ -4371,7 +4371,7 @@ int32 OnBattlefieldTick(CBattlefield* PBattlefield)
     CLuaBattlefield LuaBattlefield(PBattlefield);
     Lunar<CLuaBattlefield>::push(LuaHandle, &LuaBattlefield);
 
-    if (lua_pcall(LuaHandle, 2, LUA_MULTRET, 0))
+    if (lua_pcall(LuaHandle, 1, LUA_MULTRET, 0))
     {
         ShowError("luautils::onBattlefieldTick: %s\n", lua_tostring(LuaHandle, -1));
         lua_pop(LuaHandle, 1);
@@ -4379,12 +4379,40 @@ int32 OnBattlefieldTick(CBattlefield* PBattlefield)
     }
 
     int32 returns = lua_gettop(LuaHandle) - oldtop;
-    if (returns > 1)
+    if (returns > 0)
     {
-        ShowError("luautils::onBattlefieldTick (%s): 1 return expected, got %d\n", File, returns);
+        ShowError("luautils::onBattlefieldTick (%s): 0 returns expected, got %d\n", File, returns);
         lua_pop(LuaHandle, returns);
     }
     return 0;
+}
+
+int32 OnBattlefieldHandlerInitialise(CZone* PZone)
+{
+    lua_prepscript("scripts/globals/battlefield.lua");
+
+    // lrn2update
+    DSP_DEBUG_BREAK_IF(prepFile(File, "onBattlefieldHandlerInitialise"));
+
+    CLuaZone LuaZone(PZone);
+    Lunar<CLuaZone>::push(LuaHandle, &LuaZone);
+
+    if (lua_pcall(LuaHandle, 1, LUA_MULTRET, 0))
+    {
+        ShowError("luautils::onBattlefieldHandlerInitialise: %s\n", lua_tostring(LuaHandle, -1));
+        lua_pop(LuaHandle, 1);
+        return 0;
+    }
+
+    int32 returns = lua_gettop(LuaHandle) - oldtop;
+    if (returns > 0)
+    {
+        ShowError("luautils::onBattlefieldHandlerInitialise (%s): 0 returns expected, got %d\n", File, returns);
+        lua_pop(LuaHandle, returns);
+    }
+
+    int maxBattlefields = lua_tointeger(LuaHandle, -1);
+    return maxBattlefields;
 }
 
 

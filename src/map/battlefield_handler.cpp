@@ -38,28 +38,8 @@ CBattlefieldHandler::CBattlefieldHandler(uint16 zoneid)
 {
 	m_ZoneId = zoneid;
 
-    //TODO: handle max battlefields per battlefield type
+    m_MaxBattlefields = luautils::OnBattlefieldHandlerInitialise(zoneutils::GetZone(m_ZoneId));
 
-	//Dynamis zone (need to add COP dyna zone)
-	//added ghelsba outpost here, 1 battlefield only
-	if (m_ZoneId > 184 && m_ZoneId < 189 ||  m_ZoneId > 133 && m_ZoneId < 136 || m_ZoneId == 140 || m_ZoneId == 35 || m_ZoneId > 38  && m_ZoneId < 43 )
-    {
-		m_MaxBattlefields = 1;
-	}
-	else
-	   if(m_ZoneId == 37)
-	   {
-		   m_MaxBattlefields = 8;
-	   }
-	else
-	   if(m_ZoneId == 38)
-	   {
-		   m_MaxBattlefields = 6;
-	   }
-	else
-    {
-		m_MaxBattlefields = 3;
-	}
     memset(&m_Battlefields, 0, sizeof(m_Battlefields));
 }
 
@@ -94,7 +74,7 @@ int CBattlefieldHandler::RegisterBcnm(uint16 id, CCharEntity* PChar)
         }
     }
 
-    if (!PBattlefield->GetState() == STATE_OPEN)
+    if (PBattlefield->GetState() != STATE_OPEN)
     {
         //no player met the criteria for entering, so revoke the previous permission.
         ShowDebug("No player has met the requirements for entering the BCNM.\n");
@@ -103,6 +83,11 @@ int CBattlefieldHandler::RegisterBcnm(uint16 id, CCharEntity* PChar)
     }
 
     m_Battlefields[PBattlefield->GetBattlefieldNumber() - 1] = PBattlefield;
+    PBattlefield->InsertEntity(PChar);
+
+    // first player registered, spawn mobs and begin ticking down
+    PBattlefield->InitBattlefield();
+
     luautils::OnBcnmRegister(PChar, PBattlefield);
 
     return PBattlefield->GetBattlefieldNumber();
@@ -193,7 +178,6 @@ void CBattlefieldHandler::SetLootToBCNM(uint16 LootID,uint16 id,uint32 npcID)
 
 void CBattlefieldHandler::RestoreOnBattlefield(uint16 id)
 {
-
     if (id <= m_MaxBattlefields && id > 0)
     {
         CBattlefield* PBattlefield = m_Battlefields[id - 1];
@@ -230,9 +214,12 @@ void CBattlefieldHandler::RestoreOnBattlefield(uint16 id)
 
 CBattlefield* CBattlefieldHandler::getBattlefield(CCharEntity* PChar)
 {
+    CStatusEffect* PEffect = PChar->StatusEffectContainer->GetStatusEffect(EFFECT_BATTLEFIELD);
+
     for (int i = 0; i < m_MaxBattlefields; i++)
-        if (m_Battlefields[i] && PChar->PBCNM == m_Battlefields[i])
-            return PChar->PBCNM;
+        if (PEffect && m_Battlefields[i] && 
+                PEffect->GetPower() == m_Battlefields[i]->GetID() && PEffect->GetSubID() == m_Battlefields[i]->GetBattlefieldNumber())
+                    return m_Battlefields[i];
 
     return nullptr;
 }
@@ -299,10 +286,12 @@ bool CBattlefieldHandler::hasFreeBattlefield()
     return false;
 }
 
-uint8 CBattlefieldHandler::findBattlefieldIDFor(CCharEntity* PChar) {
-    for (int i = 0; i<m_MaxBattlefields; i++)
-        if (m_Battlefields[i] && PChar->PBCNM == m_Battlefields[i])
-            return PChar->PBCNM->GetID();
-    
+uint8 CBattlefieldHandler::findBattlefieldIDFor(CCharEntity* PChar)
+{
+    // todo: get rid of this cause it's dumb
+
+    if (getBattlefield(PChar))
+        return getBattlefield(PChar)->GetBattlefieldNumber();
+
     return 255;
 }

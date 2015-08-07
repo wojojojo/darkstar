@@ -88,28 +88,32 @@ inline int32 CLuaBattlefield::getID(lua_State* L)
 	return 1;
 }
 
-inline int32 CLuaBattlefield::getTimeInside(lua_State* L){
+inline int32 CLuaBattlefield::getTimeInside(lua_State* L)
+{
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	uint32 duration = (m_PLuaBattlefield->m_LastTick - m_PLuaBattlefield->GetStartTime())/1000;
 	lua_pushinteger( L, duration);
 	return 1;
 }
 
-inline int32 CLuaBattlefield::getFastestTime(lua_State* L){
+inline int32 CLuaBattlefield::getFastestTime(lua_State* L)
+{
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	
 	lua_pushinteger( L, m_PLuaBattlefield->GetCurrentRecord().time );
 	return 1;
 }
 
-inline int32 CLuaBattlefield::getFastestPlayer(lua_State* L){
+inline int32 CLuaBattlefield::getFastestPlayer(lua_State* L)
+{
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	
 	lua_pushstring( L, m_PLuaBattlefield->GetCurrentRecord().name.c_str() );
 	return 1;
 }
 
-inline int32 CLuaBattlefield::setCurrentRecord(lua_State* L){
+inline int32 CLuaBattlefield::setCurrentRecord(lua_State* L)
+{
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
     DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isstring(L,1));
     
@@ -120,16 +124,36 @@ inline int32 CLuaBattlefield::setCurrentRecord(lua_State* L){
 	return 1;
 }
 
-inline int32 CLuaBattlefield::getEntrance(lua_State* L){
+inline int32 CLuaBattlefield::getEntrance(lua_State* L)
+{
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 
 	lua_pushinteger(L, m_PLuaBattlefield->GetEntrance());
 	return 1;
 }
 
-inline int32 CLuaBattlefield::setEntrance(lua_State* L){
+inline int32 CLuaBattlefield::getLevelCap(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
+
+    lua_pushinteger(L, m_PLuaBattlefield->GetLevelCap());
+    return 1;
+}
+
+inline int32 CLuaBattlefield::setLevelCap(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+
+    m_PLuaBattlefield->SetLevelCap(lua_tointeger(L, 1));
+    return 0;
+}
+
+inline int32 CLuaBattlefield::setEntrance(lua_State* L)
+{
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 	DSP_DEBUG_BREAK_IF(!lua_isnumber(L, 1) || lua_isnil(L, 1));
+
 	m_PLuaBattlefield->SetEntrance(lua_tointeger(L, 1));
 	return 0;
 }
@@ -218,7 +242,7 @@ inline int32 CLuaBattlefield::getEntities(lua_State* L)
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
     uint8 filter = lua_tointeger(L, 1);
-    bool type = lua_isnil(L, 2) ? 0 : lua_tointeger(L,2);
+    bool adds = lua_isnil(L, 2) ? 0 : lua_tointeger(L,2);
 
     auto func = [&L](auto list)
     {
@@ -251,7 +275,7 @@ inline int32 CLuaBattlefield::getEntities(lua_State* L)
     else if (filter == TYPE_MOB)
     {
         // return mobs required loaded into bcnm at startup (conditions are handled separately)
-        if (!type)
+        if (!adds)
         {
             lua_createtable(L, m_PLuaBattlefield->m_MobList.size(), 0);
             int8 newTable = lua_gettop(L);
@@ -389,6 +413,7 @@ Lunar<CLuaBattlefield>::Register_t CLuaBattlefield::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBattlefield,getFastestPlayer),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,getEntrance),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,setEntrance),
+    LUNAR_DECLARE_METHOD(CLuaBattlefield,getLevelCap),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,insertAlly),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,getAllies),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,lose),
@@ -406,6 +431,7 @@ Lunar<CLuaBattlefield>::Register_t CLuaBattlefield::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBattlefield,setState),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,setBattlefieldNumber),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,setCurrentRecord),
+    LUNAR_DECLARE_METHOD(CLuaBattlefield,setLevelCap),
 
 	{nullptr,nullptr}
 }; 
