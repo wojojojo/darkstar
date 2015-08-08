@@ -33,9 +33,9 @@
 enum BATTLEFIELD_RULES
 {
     RULES_NONE                  = 0x00,
-    RULES_ALLOW_SUBJOBS         = 0x01,
+    RULES_DISABLE_SUBJOBS       = 0x01,
     RULES_LOSE_EXP              = 0x02,
-    RULES_REMOVE_3MIN           = 0x04,
+    RULES_INSTA_REMOVE_ON_WIPE  = 0x04,
     RULES_SPAWN_TREASURE_ON_WIN = 0x08,
     RULES_MAAT                  = 0x10
 };

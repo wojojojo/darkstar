@@ -75,6 +75,9 @@ public:
     int32 pushMessage(lua_State*);
     int32 getEntities(lua_State*);
     int32 insertEntity(lua_State*);
+
+    int32 getMobConditions(lua_State*);
+    int32 setFightTick(lua_State*);
 };
 
 #endif

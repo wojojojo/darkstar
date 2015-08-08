@@ -60,7 +60,7 @@ void CBattlefieldHandler::HandleBattlefields(uint32 tick)
 
 int CBattlefieldHandler::RegisterBcnm(uint16 id, CCharEntity* PChar)
 {
-    CBattlefield* PBattlefield = battlefieldutils::LoadBattlefield(this, id, BATTLEFIELDTYPE_BCNM);
+    CBattlefield* PBattlefield = battlefieldutils::LoadBattlefield(this, id);
 
     if (!PBattlefield)
         return -1;

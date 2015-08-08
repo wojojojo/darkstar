@@ -396,6 +396,38 @@ inline int32 CLuaBattlefield::setBattlefieldNumber(lua_State* L)
     return 0;
 }
 
+inline int32 CLuaBattlefield::getMobConditions(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
+
+    CMobEntity* PMob = (CMobEntity*)lua_touserdata(L, 1);
+
+    uint8 conditions = 0;
+
+    for (auto mob : m_PLuaBattlefield->m_MobList)
+    {
+        if (mob.first == PMob)
+        {
+            conditions = mob.second;
+            break;
+        }
+    }
+
+    lua_pushinteger(L, conditions);
+    return 1;
+}
+
+inline int32 CLuaBattlefield::setFightTick(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
+    
+    uint32 tick = lua_isnil(L, 1) || !lua_isnumber(L,1) ? (uint32)time(NULL) : lua_tointeger(L, 1);
+
+    m_PLuaBattlefield->m_FightTick = tick;
+    return 0;
+}
+
 /************************************************************************
 *																		*
 *  declare lua function													*
@@ -432,6 +464,8 @@ Lunar<CLuaBattlefield>::Register_t CLuaBattlefield::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBattlefield,setBattlefieldNumber),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,setCurrentRecord),
     LUNAR_DECLARE_METHOD(CLuaBattlefield,setLevelCap),
+    LUNAR_DECLARE_METHOD(CLuaBattlefield,getMobConditions),
+    LUNAR_DECLARE_METHOD(CLuaBattlefield,setFightTick),
 
 	{nullptr,nullptr}
 }; 

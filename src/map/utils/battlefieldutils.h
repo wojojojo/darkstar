@@ -1,4 +1,4 @@
-﻿ /*
+﻿/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -26,20 +26,20 @@
 
 #include "../../common/cbasetypes.h"
 #include "../../common/mmo.h"
-	
+
 class CBattlefield;
 class CBattlefieldHandler;
 
 enum BATTLEFIELDTYPE
 {
-	BATTLEFIELDTYPE_DYNAMIS,
-	BATTLEFIELDTYPE_BCNM
+    BATTLEFIELDTYPE_GENERIC,
+    BATTLEFIELDTYPE_SCRIPTED
 };
 
 namespace battlefieldutils
 {
-	bool LoadMobs(CBattlefield* battlefield);
-	CBattlefield* LoadBattlefield(CBattlefieldHandler* hand, uint16 bcnmid, BATTLEFIELDTYPE type);
+    bool LoadMobs(CBattlefield* battlefield);
+    CBattlefield* LoadBattlefield(CBattlefieldHandler* hand, uint16 bcnmid);
 };
 
 #endif
