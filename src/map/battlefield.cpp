@@ -256,6 +256,9 @@ void CBattlefield::InsertEntity(CBaseEntity* PEntity, uint8 type, uint8 conditio
 
 void CBattlefield::ClearBattlefield()
 {
+    for (auto PChar : m_PlayerList)
+        PChar->PBCNM = nullptr;
+
     // despawn mobs and reset enmity
     for (auto PMob : m_EnemyList)
     {

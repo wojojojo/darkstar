@@ -211,8 +211,7 @@ inline int32 CLuaBattlefield::lose(lua_State* L)
 {
 	DSP_DEBUG_BREAK_IF(m_PLuaBattlefield == nullptr);
 
-    m_PLuaBattlefield->SetState(STATE_LOSE);
-
+    m_PLuaBattlefield->ClearBattlefield();
 	return 0;
 }
 

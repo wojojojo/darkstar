@@ -75,7 +75,7 @@ end;
 
 function OnBattlefieldTick(battlefield)
     
-    if MeetsEndingConditions(battlefield, battlefield:isScripted()) then
+    if MeetsEndingConditions(battlefield, battlefield:getType()) then
         HandleBattlefieldEnd(battlefield);
     end
     
@@ -212,4 +212,15 @@ function HandleBattlefieldEnd(battlefield)
     local RuleMask = battlefield:getRuleMask();
     local State = battlefield:getState();
     -- todo: handle win/lose here
+    
+    if State == BATTLEFIELD_STATE.WIN then
+        if bit.band(RuleMask, BATTLEFIELD_RULES.SPAWN_TREASURE_ON_WIN) then
+            battlefield:spawnTreasureChest();
+        else
+            -- battlefield:cleanup();
+        end
+    elseif State == BATTLEFIELD_STATE.LOSE then
+        battlefield:lose();
+    end
+    
 end
